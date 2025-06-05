@@ -1,17 +1,29 @@
+use std::collections::HashSet;
+
 use thiserror::Error;
 
-pub fn part1(input: &str) -> anyhow::Result<()> {
+pub fn part2(input: &str) -> anyhow::Result<()> {
     // println!("{input}");
     let parts = input
         .split(", ")
         .map(try_parse_path_fragment)
         .filter_map(|res| res.ok())
+        .map(singularize_path_fragment)
+        .flatten()
         .collect::<Vec<_>>();
     // println!("{:?}", parts);
+    let mut visited = HashSet::new();
     let mut position = (0, 0);
     let mut direction = (0, 1);
+
+    // We also add the starting point
+    visited.insert(position);
     for path_fragmen in parts {
         append_next_path_fragment(&mut position, &mut direction, &path_fragmen);
+        if visited.contains(&position) {
+            break;
+        }
+        visited.insert(position);
     }
     let distance = position.0.abs() + position.1.abs();
     println!(
@@ -53,6 +65,57 @@ fn try_parse_path_fragment(input: &str) -> anyhow::Result<PathFragment> {
         }
         .into()),
     }
+}
+
+fn singularize_path_fragment(path_fragment: PathFragment) -> Vec<PathFragment> {
+    let xy_amount = path_fragment.x.abs() + path_fragment.y.abs();
+    let x_dir = path_fragment.x.signum();
+    let mut singularized_path_fragments = Vec::with_capacity(xy_amount as usize);
+    if x_dir != 0 {
+        let mut x_paths = (0..path_fragment.x.abs())
+            .map(|index| {
+                if index == 0 {
+                    // The first fragment has the direction
+                    PathFragment {
+                        x: x_dir,
+                        ..Default::default()
+                    }
+                } else {
+                    // The follow fragments go straight in the local coordinate system
+                    PathFragment {
+                        y: 1,
+                        ..Default::default()
+                    }
+                }
+            })
+            .collect::<Vec<PathFragment>>();
+        singularized_path_fragments.append(&mut x_paths);
+    }
+    // In this example we never go up or down, but always only left or right, so this will never happen.
+    // Was added for completness (untested)
+    let y_dir = path_fragment.y.signum();
+    if y_dir != 0 {
+        let mut y_paths = (0..path_fragment.y.abs())
+            .map(|index| {
+                if index == 0 {
+                    // The first fragment has the direction
+                    PathFragment {
+                        y: y_dir,
+                        ..Default::default()
+                    }
+                } else {
+                    // The follow fragments go straight in the local coordinate system
+                    PathFragment {
+                        y: 1,
+                        ..Default::default()
+                    }
+                }
+            })
+            .collect::<Vec<PathFragment>>();
+        singularized_path_fragments.append(&mut y_paths);
+    }
+    // println!("{xy_amount}: {singularized_path_fragments:?}");
+    singularized_path_fragments
 }
 
 fn append_next_path_fragment(
