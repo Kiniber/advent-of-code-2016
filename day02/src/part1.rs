@@ -4,14 +4,25 @@ use thiserror::Error;
 
 pub fn part1(input: &str) -> anyhow::Result<()> {
     let input = input.trim();
+    let lines = input.split("\n").collect::<Vec<_>>();
+    let mut keys = Vec::new();
+    for line in lines {
+        analyze_line(line, &mut keys)?;
+    }
+    for key in keys {
+        print!("{key}");
+    }
+    println!("");
+    Ok(())
+}
+
+fn analyze_line(input: &str, keys: &mut Vec<Keypad>) -> anyhow::Result<()> {
     let chars = input.chars().collect::<Vec<_>>();
     let directions = chars
         .into_iter()
         .filter_map(|c| c.try_into().ok())
         .collect::<Vec<Direction>>();
     let mut current_key = Keypad::K5;
-
-    let mut keys = Vec::new();
     let mut last_pushed_key= None;
     for dir in directions {
         if let Some(next_key) = &current_key.try_move(&dir) {
@@ -19,23 +30,18 @@ pub fn part1(input: &str) -> anyhow::Result<()> {
             last_pushed_key = None;
             print!(" {dir}{current_key}");
         } else if last_pushed_key != Some(current_key) {
-            keys.push(current_key);
+            //keys.push(current_key);
             last_pushed_key = Some(current_key);
-            println!("--> {dir}{current_key}");
+            println!(" --> {dir}{current_key} (hitting edge)");
         } else{
-            println!("- {dir}{current_key} (ignored)");
+            println!(" --> {dir}{current_key} (hitting edge again)");
         }
         // else the key was already pushed, ignore
     }
     println!("");
-    if last_pushed_key.is_none() {
-        keys.push(current_key);
-        println!("--> {current_key} (final key)");
-    }
-    for key in keys {
-        print!("{key}");
-    }
-    println!("");
+    keys.push(current_key);
+    println!("--> {current_key} (final key)");
+    
     Ok(())
 }
 
