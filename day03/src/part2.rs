@@ -2,8 +2,8 @@ use itertools::Itertools;
 
 pub fn part2(input: &str) -> anyhow::Result<()> {
 
-    let x = input.split_whitespace().collect::<Vec<_>>();
-    let chunked = x.into_iter().chunks(9);
+    let words = input.split_whitespace().collect::<Vec<_>>();
+    let chunked = words.into_iter().chunks(9);
     //let chunked = chunked.into_iter().collect::<Vec<_>>();
     let all_shapes = chunked.into_iter().map(|mut chunk|{
         let a1 = chunk.next().unwrap();
