@@ -28,13 +28,13 @@ fn analyze_line(input: &str, keys: &mut Vec<Keypad>) -> anyhow::Result<()> {
         if let Some(next_key) = &current_key.try_move(&dir) {
             current_key = next_key.clone();
             last_pushed_key = None;
-            print!(" {dir}{current_key}");
+            //print!(" {dir}{current_key}");
         } else if last_pushed_key != Some(current_key) {
             //keys.push(current_key);
             last_pushed_key = Some(current_key);
-            println!(" --> {dir}{current_key} (hitting edge)");
+            //println!(" --> {dir}{current_key} (hitting edge)");
         } else{
-            println!(" --> {dir}{current_key} (hitting edge again)");
+            //println!(" --> {dir}{current_key} (hitting edge again)");
         }
         // else the key was already pushed, ignore
     }
