@@ -4,6 +4,7 @@ pub fn part1(input: &str) -> anyhow::Result<()> {
     let all_shapes = input.lines()
         .map(|line| {
             let parts = line.split_whitespace()
+            // collect_tuple is from the crate itertools
             .collect_tuple::<(&str, &str, &str)>()
             // We can iterate over an option
             // it is like a list with either 0 or 1 entries
