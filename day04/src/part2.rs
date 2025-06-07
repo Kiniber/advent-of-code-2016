@@ -16,7 +16,7 @@ pub fn part2(input: &str) -> anyhow::Result<()> {
             Room::new(encrypted_name_part, sector_id, checksum)
         })
         .filter(Room::validate)
-        .find(|room|room.get_decrypted_name().starts_with("northpole-object-storage"))
+        .find(|room|room.get_decrypted_name().starts_with("northpole object storage"))
         .expect("No secret room found");
     //.for_each(|(encrypted_name_part, sector_id, checksum, _)|println!("{encrypted_name_part:?} - {sector_id:?} - {checksum:?}"))
     println!("Secret room id: {}", secret_room.sector_id);
@@ -72,7 +72,7 @@ impl<'a> Room<'a> {
         let sector_id = self.sector_id;
         self.encrypted_name_part.chars().map(|c|
             match c {
-                '-' => '-',
+                '-' => ' ',
                 c => {
                     let res = (((c as u16) - ('a' as u16)  + sector_id) % 26u16) as u8 + ('a' as u8);
                     let chr = res as char;
