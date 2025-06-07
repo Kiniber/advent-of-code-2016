@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeSet, HashMap};
 
 use regex::Regex;
 
@@ -26,7 +26,7 @@ pub fn part1(input: &str) -> anyhow::Result<()> {
 }
 
 struct Room<'a> {
-    encrypted_name_part: &'a str,
+    _encrypted_name_part: &'a str,
     sector_id: i32,
     checksum: &'a str,
     char_set: BTreeSet<SortingElement>,
@@ -63,7 +63,7 @@ impl Ord for SortingElement {
 impl<'a> Room<'a> {
     fn new(encrypted_name_part: &'a str, sector_id: i32, checksum: &'a str) -> Self {
         Self {
-            encrypted_name_part,
+            _encrypted_name_part: encrypted_name_part,
             sector_id,
             checksum,
             char_set: Room::count_chars(encrypted_name_part),
@@ -72,22 +72,18 @@ impl<'a> Room<'a> {
 
     fn validate(&self) -> bool {
         let set = &self.char_set;
-        let checksum = self.checksum;
-        let encrypted_name_part = self.encrypted_name_part;
-        let sector_id = self.sector_id;
-        //println!("checking: {encrypted_name_part}-{sector_id}-{checksum}");
-        //set.iter().for_each(|SortingElement{amount, chr}|println!("{chr}: {amount}"));
 
         let amount = set
             .iter()
             .take(5)
             .zip(self.checksum.chars().into_iter())
-            .filter(|(SortingElement { amount, chr }, checksum_char)| {
+            .filter(|(SortingElement { chr, .. }, checksum_char)| {
                 //println!("{chr}?{checksum_char}: {amount}");
                 chr == checksum_char
             })
             .count();
         if amount == 5 {
+            /*
             let details = set
                 .iter()
                 //.take(10)
@@ -99,10 +95,12 @@ impl<'a> Room<'a> {
                         builder
                     },
                 );
+            */
             //println!("valid: {checksum} {details}");
-            println!("+ valid: {encrypted_name_part}-{sector_id}[{checksum}] {details}");
+            //println!("+ valid: {encrypted_name_part}-{sector_id}[{checksum}] {details}");
             return true;
         } else {
+            /*
             let details = set
                 .iter()
                 //.take(10)
@@ -114,9 +112,10 @@ impl<'a> Room<'a> {
                         builder
                     },
                 );
+            */
             //eprintln!("invalid: {checksum} {details}");
 
-            println!("invalid: {encrypted_name_part}-{sector_id}[{checksum}] {details}");
+            //println!("invalid: {encrypted_name_part}-{sector_id}[{checksum}] {details}");
         }
         return false;
     }
