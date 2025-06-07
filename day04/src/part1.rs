@@ -7,24 +7,27 @@ pub fn part1(input: &str) -> anyhow::Result<()> {
         r"(?<encrypted_name_part>(([a-z]+)-?)+)-(?<sector_id>\d+)\[(?<checksum>[a-z]+)\]",
     )?;
     let results = regex.captures_iter(input).collect::<Vec<_>>();
-    let real_rooms_amount = results
+    let sum_of_room_ids = results
         .into_iter()
         .map(|captures| {
             let encrypted_name_part = captures.name("encrypted_name_part").unwrap().as_str();
-            let sector_id = captures.name("sector_id").unwrap().as_str();
+            let sector_id = captures.name("sector_id").unwrap().as_str().parse::<i32>().unwrap();
             let checksum = captures.name("checksum").unwrap().as_str();
             Room::new(encrypted_name_part, sector_id, checksum)
         })
         .filter(Room::validate)
-        .count();
+        .fold(0, |mut sum, entry| {
+            sum += entry.sector_id;
+            sum
+        });
     //.for_each(|(encrypted_name_part, sector_id, checksum, _)|println!("{encrypted_name_part:?} - {sector_id:?} - {checksum:?}"))
-    println!("Real rooms amount: {real_rooms_amount}");
+    println!("Sum of room ids: {sum_of_room_ids}");
     Ok(())
 }
 
 struct Room<'a> {
     encrypted_name_part: &'a str,
-    sector_id: &'a str,
+    sector_id: i32,
     checksum: &'a str,
     char_set: BTreeSet<SortingElement>,
 }
@@ -58,7 +61,7 @@ impl Ord for SortingElement {
 }
 
 impl<'a> Room<'a> {
-    fn new(encrypted_name_part: &'a str, sector_id: &'a str, checksum: &'a str) -> Self {
+    fn new(encrypted_name_part: &'a str, sector_id: i32, checksum: &'a str) -> Self {
         Self {
             encrypted_name_part,
             sector_id,
