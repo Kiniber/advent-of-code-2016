@@ -3,6 +3,7 @@ use std::time::Instant;
 mod part1;
 mod part1_single_threaded;
 mod part2;
+mod part2_single;
 
 fn main() -> anyhow::Result<()> {
     println!("Advent of code 2016: 5.1");
@@ -10,13 +11,21 @@ fn main() -> anyhow::Result<()> {
     let start_time = Instant::now();
     part1::part1(input)?;
     let duration = start_time.elapsed();
-    println!("Time elapsed (parallel): {duration:?}");
+    println!("5.1 Time elapsed (parallel): {duration:?}");
 
     let start_time = Instant::now();
     part1_single_threaded::part1(input)?;
     let duration = start_time.elapsed();
-    println!("Time elapsed (single threaded): {duration:?}");
-    //println!("Advent of code 2016: 5.2");
-    //part2::part2(input)?;
+    println!("5.1 Time elapsed (single threaded): {duration:?}");
+    println!("Advent of code 2016: 5.2");
+    let start_time = Instant::now();
+    part2::part2(input)?;
+    let duration = start_time.elapsed();
+    println!("5.2 Time elapsed (parallel): {duration:?}");
+    println!("Advent of code 2016: 5.2");
+    let start_time = Instant::now();
+    part2_single::part2(input)?;
+    let duration = start_time.elapsed();
+    println!("5.2 Time elapsed (single threaded): {duration:?}");
     Ok(())
 }

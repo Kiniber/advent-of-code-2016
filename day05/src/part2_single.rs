@@ -3,8 +3,6 @@ use std::{
     sync::{Arc, RwLock},
 };
 
-use rayon::prelude::*;
-
 pub fn part2(input: &str) -> anyhow::Result<()> {
     //let input = "abc";
     let pw_tracker = Arc::new(RwLock::new(vec![
@@ -12,7 +10,6 @@ pub fn part2(input: &str) -> anyhow::Result<()> {
     ]));
     let mut collected_hashs = std::iter::repeat(input)
         .enumerate()
-        .par_bridge()
         .map(|(index, input)| (index, input, calculate_hash(index, input)))
         .filter(|(_, _, hash)| hash.starts_with("00000"))
         .filter_map(|(index, input, hash)| {
@@ -30,7 +27,7 @@ pub fn part2(input: &str) -> anyhow::Result<()> {
             None
         })
         //.take_any(8)
-        .take_any_while(|(_index, _input, _hash, password_index, password_char)| {
+        .take_while(|(_index, _input, _hash, password_index, password_char)| {
             let c = match password_index {
                 // Using @ Binding to limit only to indexes 0 - 6
                 c @ 0..8 => Some(c),
