@@ -1,10 +1,7 @@
-use rayon::prelude::*;
-
 pub fn part1(input: &str) -> anyhow::Result<()> {
     //let input = "abc";
     let mut collected_hashs = 
         std::iter::repeat(input).enumerate()
-        .par_bridge()
     .map(|(index, input)| (index, input, calculate_hash(index, input)))
     .filter(|(_, _, hash)| hash.starts_with("00000"))
     .map(|(index, input, hash)|{
@@ -12,7 +9,7 @@ pub fn part1(input: &str) -> anyhow::Result<()> {
         let relevant_char = slice.to_owned();
         (index, input, hash, relevant_char.clone())
     })
-    .take_any(8)
+    .take(8)
     //.take_any_while(|(index,input, hash)| index < &5)
     
     .collect::<Vec<_>>()
