@@ -1,0 +1,9 @@
+[package]
+name = "day05"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.98"
+md5 = "0.7.0"
+rayon = "1.10.0"
