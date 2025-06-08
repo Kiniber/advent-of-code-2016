@@ -34,7 +34,6 @@ pub fn part1(input: &str) -> anyhow::Result<()> {
                     println!("{bad_sequence} - {}",
                         line.replace(bad_sequence.as_str(), format!("{color_red}{bad_sequence}{color_reset}").as_str()));
                 }
-                everything_valid = false;
                 return false;
             }
             bracket = a_opt;
