@@ -6,7 +6,6 @@ use std::{
 use rayon::prelude::*;
 
 pub fn part2(input: &str) -> anyhow::Result<()> {
-    //let input = "abc";
     let pw_tracker = Arc::new(RwLock::new(vec![
         false, false, false, false, false, false, false, false,
     ]));
@@ -29,10 +28,9 @@ pub fn part2(input: &str) -> anyhow::Result<()> {
             }
             None
         })
-        //.take_any(8)
         .take_any_while(|(_index, _input, _hash, password_index, password_char)| {
             let c = match password_index {
-                // Using @ Binding to limit only to indexes 0 - 6
+                // Using @ Binding to limit only to indexes 0 - 7
                 c @ 0..8 => Some(c),
                 _ => None,
             };
