@@ -1,0 +1,9 @@
+[package]
+name = "day07"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.98"
+inline_colorization = "0.1.6"
+thiserror = "2.0.12"
