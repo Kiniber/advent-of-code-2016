@@ -1,8 +1,6 @@
 use std::{cmp, fmt::Display};
 use inline_colorization::*;
 
-use regex::Match;
-
 pub fn part1(input: &str) -> anyhow::Result<()> {
     let parsed = input.lines().flat_map(|line|line.split_whitespace()).map(parse).flatten().collect::<Vec<_>>();
     parsed.iter().for_each(|fragment|println!("{fragment}"));
@@ -49,8 +47,8 @@ fn parse(word: &str) -> Vec<Fragment> {
     (?<remainder>.*) # whatever is left afterwards"
     ).expect("Compiling Regex failed");
     let mut vec = vec![];
-    let mut uncompressed = "";
-    let mut compressed = "";
+    let mut uncompressed;
+    let mut compressed;
     let mut remainder = word;
     while let Some(captures) =regex.captures(remainder) {
 
@@ -70,7 +68,7 @@ fn parse(word: &str) -> Vec<Fragment> {
         let repeated_part = &remainder[0..char_amount];
         remainder = &remainder[char_amount..];
 
-        let fragment = Fragment::Compressed { length: b, repeat: a, sequence: repeated_part.to_string() };
+        let fragment = Fragment::Compressed { length: a, repeat: b, sequence: repeated_part.to_string() };
         vec.push(fragment);
         
         //println!("\n\nrepeated_part: {repeated_part}\n\nremainder: {remainder}\n");
